@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Hangman</title>
+
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Hangman</h1>
+        </div>
+    </div>
+</div>
+
+<div class="contianer">
+    <div class="row">
+        <div id="word-bank" class="col-md-12">
+            Press a letter to Start!
+        </div>
+    </div>
+</div>
+
+<div class="contianer">
+    <div class="row">
+        <div id="guesses-left" class="col-md-12">
+            Guesses Left:
+        </div>
+    </div>
+</div>
+
+<div class="contianer">
+    <div class="row">
+        <div id="wrong-letters" class="col-md-12">
+            Already Guessed:
+        </div>
+    </div>
+</div>
+
+<div class="contianer">
+    <div class="row">
+        <div id="win-counter" class="col-md-12">
+            Win Counter:
+        </div>
+    </div>
+</div>
+
+<div class="contianer">
+    <div class="row">
+            <div id="loss-counter" class="col-md-12">
+                Loss Counter:
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+<script type="text/javascript">
+// Declare our Global Variables:
+var winCounter = 0;
+var lossCounter = 0;
+var guessesLeft = 9;
+var wrongLetter = [];
+var answerArray = [];
+//UserGuess and LetterCheck Boolean
+var word = "";
+var wordSplit = [];
+var wordBank = ["dog", "cat", "doctor"];
+var letter;
+
+//Start Game Function
+function gameStart(){
+    guessesLeft = 9;
+    wrongLetter = [];
+    answerArray = [];
+    wordSplit = [];
+    word = wordBank[Math.floor(Math.random() * wordBank.length)];
+    wordSplit = word.split('');
+    for (var i = 0; i < wordSplit.length; i++){
+        answerArray.push('_');
+    }
+    document.getElementById("word-bank").innerHTML = answerArray.join(" ");
+    document.getElementById("guesses-left").innerHTML = "<p> Guesses left: " + guessesLeft + "</p>";
+    document.getElementById("wrong-letters").innerHTML = "<p> Already guessed: " + wrongLetter.join(",") + "</p>";
+}
+
+// Correct / Wrong Answer Conditional Function
+function inWord(letter){
+    var letterCheck = false;
+    for (var i = 0; i < wordSplit.length; i++){
+        if(wordSplit[i] === letter){
+            letterCheck = true;
+        }
+    }
+    if(letterCheck){
+        for(var i = 0; i < wordSplit.length; i++){
+            if(wordSplit[i] === letter){
+                answerArray[i] = letter;
+            }
+        }
+    }
+    else{
+        guessesLeft--;
+        wrongLetter.push(letter);
+    }
+} 
+
+//Win / Loss Condtion Function
+function gameUpdate(){
+    document.getElementById('word-bank').innerHTML = answerArray.join(" ");
+    document.getElementById('guesses-left').innerHTML = '<p> Guesses left: ' + guessesLeft + '</p>';
+    document.getElementById('wrong-letters').innerHTML = '<p> Already guessed: ' + wrongLetter.join(",") + '</p>';
+
+    if(wordSplit.join(' ') === answerArray.join(' ')){
+        winCounter++;
+        alert('Win! Word: ' + word);
+        document.getElementById('win-counter').innerHTML = '<p> Win Counter: ' + winCounter + '</p>';
+        gameStart();
+    }
+    else if (guessesLeft === 0){
+        lossCounter++;
+        alert('Lose! ' + word);
+        document.getElementById('loss-counter').innerHTML = '<p> Loss Counter: ' + lossCounter + '</p>';
+        gameStart();
+    }
+}
+
+
+//Keypress Function
+document.onkeyup = function(event){
+    var letter = event.key;
+    inWord(letter);
+    gameUpdate();
+}
+
+
+
+</script>
+
+</body>
+</html>
